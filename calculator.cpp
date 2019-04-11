@@ -1,9 +1,9 @@
-// Name
-// Section
+// Junji Bressan
+// CPSC 301 Section 1
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cmath> 
+#include <cmath>
 
 using namespace std;
 
