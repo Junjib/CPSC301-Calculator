@@ -34,10 +34,12 @@ int main()
     ifstream inFile ("largeNumbers.txt");
     ofstream outFile ("output.txt");
 
-    while (!inFile.eof())
+    right = loadNumber(inFile);
+
+    /*while (!inFile.eof())
     {
         // implement program logic here
-    }
+    }*/
     outFile.close();
     inFile.close();
     return 0;
@@ -83,7 +85,56 @@ int digcmp(digit * left, digit * right){
 
 digit * loadNumber(ifstream & file)
 {
-  return nullptr;
+  digit *head = nullptr;
+  //digit *tail = nullptr;
+  digit *newDigit = nullptr;
+  digit *test = nullptr;
+  char charNum;
+  int num;
+
+  /*file.get(num);
+  test = num;
+  test -= 48;
+  head->data = test;
+  cout << head->data << endl;*/
+  while(!file.eof())
+  {
+    file.get(charNum);
+    if(charNum == '\n')
+    {
+      break;
+    }
+    newDigit = new digit;
+    if(head == nullptr)
+    {
+      num = charNum - 48;
+      newDigit->data = num;
+      head = newDigit;
+    }
+    if(head != nullptr)
+    {
+      num = charNum - 48;
+      newDigit->data = num;
+      newDigit->next = head;
+      head = newDigit;
+    }
+    cout << head->data;
+    /*num = charNum - 48;
+    newDigit->data = num;
+    head = newDigit;
+    tail = head;
+    head = new digit;
+    head->next = tail;
+    cout << tail->data;*/
+  }
+  //cout << head->data;
+  cout << endl;
+  /*for(test = head; test->next != nullptr; test = test->next)
+  {
+    cout << test->data;
+  }*/
+  cout << endl;
+  return head;
 }
 
 char getOperator(ifstream & file)
