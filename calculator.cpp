@@ -46,6 +46,8 @@ int main()
         if(charOperator == '+')
         {
           result = addNumbers(left, right);
+          writeNumber(result, outFile);
+          deleteNumber(result);
         }
     }
     outFile.close();
@@ -99,7 +101,6 @@ int digcmp(digit * left, digit * right){
 // digit into a linked list in reverse order. It will stop when the number on
 // that particular line ends. It returns the head pointer pointing to the front
 // of the list. i.e. original: 1234567  list: 7654321
-
 digit * loadNumber(ifstream & file)
 {
   digit *head = nullptr;
@@ -136,7 +137,6 @@ digit * loadNumber(ifstream & file)
 // =============================================================================
 // This function reads from largeNumbers.txt and grabs the operator. It returns
 // the operator it grabs.
-
 char getOperator(ifstream & file)
 {
   // hint: use get
@@ -172,16 +172,30 @@ void writeNumRecurse(digit * num, ofstream & file)
 // =============================================================================
 
 // =============================================================================
+// This function will write the data in the linked list to output.txt.
 void writeNumber(digit * num, ofstream & file)
 {
-  return;
+  digit *writeDigit = nullptr;
+
+  for(writeDigit = num; writeDigit != nullptr; writeDigit = writeDigit->next)
+  {
+    file << writeDigit->data;
+  }
+  file << endl;
 }
 // =============================================================================
 
 // =============================================================================
+// This function will delete the data in the list once it is no longer needed.
 void deleteNumber(digit * num)
 {
-  return;
+  digit *deleteDigit = nullptr;
+  while(num != nullptr)
+  {
+    deleteDigit = num;
+    num = num->next;
+    delete deleteDigit;
+  }
 }
 // =============================================================================
 
@@ -293,6 +307,7 @@ digit * addNumbers(digit * left, digit * right)
       right = right->next;
     }
   }
+  // Display answer
   for(digit *test = head; test != nullptr; test = test->next)
   {
     cout << test->data;
