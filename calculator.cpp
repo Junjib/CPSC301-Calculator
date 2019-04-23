@@ -48,6 +48,8 @@ int main()
           result = addNumbers(left, right);
           writeNumber(result, outFile);
           deleteNumber(result);
+          deleteNumber(left);
+          deleteNumber(right);
         }
     }
     outFile.close();
@@ -200,119 +202,161 @@ void deleteNumber(digit * num)
 // =============================================================================
 
 // =============================================================================
+// This function adds the left and right numbers and returns the a pointer that
+// pointing to a list containing the answer. There are three cases: if both
+// numbers are the same size, if the left number is bigger than the rightm and
+// if the right number is bigger than left. Based on these cases the digits will
+// be added together and a node will be added to a new list. Will handle carries.
 digit * addNumbers(digit * left, digit * right)
 {
   digit *sum = nullptr;
   digit *head = nullptr;
   int result = 0, firstDigit = 0, secondDigit = 0;
 
-  while(left != nullptr || right != nullptr)
+// Case 1: Both numbers are equal or have not ended
+  while(left != nullptr && right != nullptr)
   {
     sum = new digit;
-    // if right number has ended
-    if(left == nullptr && right != nullptr)
-    {
-      result = right->data + secondDigit;
-    }
-    // if left number has ended
-    else if(right == nullptr && left != nullptr)
-    {
-      result = left->data + secondDigit;
-    }
-    // if both numbers have not ended
-    else
-    {
-      result = left->data + right->data + secondDigit;
-    }
+    result = left->data + right->data + secondDigit;
 
-    // if result is a double digit number
     if(result > 9)
     {
       firstDigit = result % 10;
       secondDigit = result / 10;
-    }
-    // if result is a single digit number
-    else
-    {
-      // if empty list
-      if(head == nullptr)
-      {
-        sum->data = result;
-        head = sum;
-      }
-      // if list is not empty
-      else
-      {
-        sum->data = result;
-        sum->next = head;
-        head = sum;
-      }
-    }
-    // if secondDigit is not zero (result is double digit)
-    if(secondDigit != 0)
-    {
-      // if list is empty
+
       if(head == nullptr)
       {
         sum->data = firstDigit;
         head = sum;
       }
-      // if list is not empty
       else
       {
         sum->data = firstDigit;
         sum->next = head;
         head = sum;
       }
-      // if both lists are about to end (adding a new node for secondDigit)
-      if(left->next == nullptr && left->next == nullptr)
+
+      if(left->next == nullptr && right->next == nullptr)
       {
         sum = new digit;
         sum->data = secondDigit;
         sum->next = head;
         head = sum;
       }
-      // if right number has ended
-      if(right == nullptr && left != nullptr)
-      {
-        sum = new digit;
-        sum->data = firstDigit;
-        sum->next = head;
-        head = sum;
-      }
-      // if left number has ended
-      if(left == nullptr && right != nullptr)
-      {
-        sum = new digit;
-        sum->data = firstDigit;
-        sum->next = head;
-        head = sum;
-      }
     }
-
-    // if right number has ended
-    if(right == nullptr && left != nullptr)
-    {
-      left = left->next;
-    }
-    // if left number has ended
-    else if(left == nullptr && right != nullptr)
-    {
-      right = right->next;
-    }
-    // if both numbers have not ended
     else
     {
-      left = left->next;
-      right = right->next;
+      if(head == nullptr)
+      {
+        sum->data = result;
+        head = sum;
+      }
+      else
+      {
+        sum->data = result;
+        sum->next = head;
+        head = sum;
+      }
     }
+    left = left->next;
+    right = right->next;
   }
-  // Display answer
-  for(digit *test = head; test != nullptr; test = test->next)
+
+  // Case 2: left number is larger than right number or right number has ended
+  while(left != nullptr && right == nullptr)
   {
-    cout << test->data;
+    sum = new digit;
+    result = left->data + secondDigit;
+
+    if(result > 9)
+    {
+      firstDigit = result % 10;
+      secondDigit = result / 10;
+
+      if(head == nullptr)
+      {
+        sum->data = firstDigit;
+        head = sum;
+      }
+      else
+      {
+        sum->data = firstDigit;
+        sum->next = head;
+        head = sum;
+      }
+
+      if(left->next == nullptr && right == nullptr)
+      {
+        sum = new digit;
+        sum->data = secondDigit;
+        sum->next = head;
+        head = sum;
+      }
+    }
+    else
+    {
+      if(head == nullptr)
+      {
+        sum->data = result;
+        head = sum;
+      }
+      else
+      {
+        sum->data = result;
+        sum->next = head;
+        head = sum;
+      }
+    }
+    left = left->next;
   }
-  cout << endl;
+
+  // Case 3: right number is larger than left number or left number has ended
+  while(left == nullptr && right != nullptr)
+  {
+    sum = new digit;
+    result = right->data + secondDigit;
+
+    if(result > 9)
+    {
+      firstDigit = result % 10;
+      secondDigit = result / 10;
+
+      if(head == nullptr)
+      {
+        sum->data = firstDigit;
+        head = sum;
+      }
+      else
+      {
+        sum->data = firstDigit;
+        sum->next = head;
+        head = sum;
+      }
+
+      if(left == nullptr && right->next == nullptr)
+      {
+        sum = new digit;
+        sum->data = secondDigit;
+        sum->next = head;
+        head = sum;
+      }
+    }
+    else
+    {
+      if(head == nullptr)
+      {
+        sum->data = result;
+        head = sum;
+      }
+      else
+      {
+        sum->data = result;
+        sum->next = head;
+        head = sum;
+      }
+    }
+    right = right->next;
+  }
 
   return sum;
 }
